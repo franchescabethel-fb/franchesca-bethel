@@ -330,8 +330,7 @@
     if ($('.cover')) {
       tl.from('.cover-meta', { opacity: 0, y: -14, duration: 1 }, 0)
         .from(mhChars, { yPercent: 115, rotate: 6, duration: 1.3, stagger: .045 }, .05)
-        .from('.cover-photo-inner', { clipPath: 'inset(100% 0% 0% 0% round 999px 999px 8px 8px)', duration: 1.5, ease: 'expo.inOut' }, .2)
-        .from('.cover-photo-inner img', { scale: 1.35, duration: 2.2 }, .3)
+        .from('.cover-cut', { yPercent: 22, opacity: 0, scale: 1.06, duration: 1.9 }, .35)
         .from('.coverlines li', { y: 40, opacity: 0, duration: 1.1, stagger: .08 }, .8)
         .fromTo('.cover-sign', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 1.6, ease: 'power2.inOut' }, 1.1)
         .from('.cover-foot > *', { y: 20, opacity: 0, duration: 1, stagger: .1 }, 1.2)
@@ -369,7 +368,7 @@
 
   /* ---------- cover scroll + tilt ---------- */
   if ($('.cover')) {
-    G.to('.cover-photo-inner img', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
+    G.to('.cover-cut', { yPercent: -10, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
     G.to('.masthead', { yPercent: 35, opacity: .2, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
     G.to('.cover-grid', { yPercent: -8, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
   }
