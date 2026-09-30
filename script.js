@@ -214,6 +214,16 @@
       });
     });
     activate('style');
+    // reserve room under the door names for the tallest info card (desktop layout)
+    const list = $('.door-list', doorsSec);
+    const fit = () => {
+      if (window.innerWidth <= 900) { list.style.paddingBottom = ''; return; }
+      const tallest = Math.max(...$$('.door-panel', doorsSec).map(p => p.offsetHeight));
+      list.style.paddingBottom = (tallest + 24) + 'px';
+    };
+    fit();
+    window.addEventListener('resize', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   }
 
   /* =========================================================

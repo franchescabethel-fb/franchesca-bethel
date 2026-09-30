@@ -300,7 +300,7 @@ ul, ol { list-style: none; }
   position: relative; min-height: 100vh; min-height: 100svh; overflow: hidden;
   background: var(--door-bg); color: var(--cream);
   transition: background .8s var(--ease);
-  padding: clamp(90px, 10vw, 130px) 0;
+  padding: clamp(80px, 8vw, 110px) 0 clamp(50px, 5vw, 70px);
   display: flex; align-items: center;
 }
 .doors[data-theme="strategy"] { --door-bg: var(--ink); }
@@ -308,21 +308,21 @@ ul, ol { list-style: none; }
 .doors[data-theme="travel"] { --door-bg: #171417; }
 .doors-bg { position: absolute; inset: 0; }
 .doors-bg img {
-  position: absolute; right: 0; top: 0; width: 46%; height: 100%; object-fit: cover;
+  position: absolute; right: 0; top: 0; width: 44%; height: 100%; object-fit: cover;
   opacity: 0; transform: scale(1.12); clip-path: inset(0 0 0 100%);
   transition: opacity .9s var(--ease), transform 1.4s var(--ease), clip-path 1.1s var(--ease);
 }
 .doors-bg img.on { opacity: .9; transform: scale(1); clip-path: inset(0 0 0 0); }
-.doors-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--door-bg) 38%, rgba(0,0,0,0) 75%); transition: background .8s var(--ease); pointer-events: none; }
+.doors-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--door-bg) 54%, rgba(0,0,0,0) 64%); transition: background .8s var(--ease); pointer-events: none; }
 .doors-inner { position: relative; z-index: 2; width: 100%; display: grid; grid-template-columns: 1fr; }
-.doors-head { display: flex; align-items: baseline; gap: 26px; flex-wrap: wrap; margin-bottom: 34px; }
+.doors-head { display: flex; align-items: baseline; gap: 26px; flex-wrap: wrap; margin-bottom: 22px; }
 .doors-head .eyebrow { color: var(--taupe-soft); }
 .doors-title { font-family: var(--script); font-weight: 400; font-size: clamp(44px, 5vw, 72px); line-height: 1; }
 .doors-hint { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; opacity: .6; }
-.door-list { position: relative; }
+.door-list { position: relative; max-width: 52vw; padding-bottom: 310px; }
 .door-word {
   display: flex; align-items: flex-start; gap: 16px; text-align: left; padding: 2px 0;
-  font-family: var(--serif); text-transform: uppercase; font-size: clamp(56px, 8.2vw, 136px); line-height: .9; letter-spacing: -.01em;
+  font-family: var(--serif); text-transform: uppercase; font-size: clamp(48px, 6.3vw, 104px); line-height: .9; letter-spacing: -.01em;
   color: transparent; -webkit-text-stroke: 1px rgba(244,235,221,.55);
   transition: color .5s var(--ease), -webkit-text-stroke-color .5s;
 }
@@ -333,19 +333,19 @@ ul, ol { list-style: none; }
 .door-word:hover { -webkit-text-stroke-color: var(--cream); }
 
 .door-panel {
-  position: absolute; right: 0; top: 50%; width: min(400px, 36%);
-  transform: translateY(-40%); opacity: 0; visibility: hidden;
+  position: absolute; left: 0; bottom: 0; width: min(560px, 100%);
+  transform: translateY(24px); opacity: 0; visibility: hidden;
   transition: opacity .5s var(--ease), transform .8s var(--ease), visibility 0s linear .5s;
   background: rgba(20,10,10,.38); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(244,235,221,.2); border-radius: 10px; padding: 28px;
+  border: 1px solid rgba(244,235,221,.2); border-radius: 10px; padding: 22px 26px;
 }
-.door.on .door-panel { opacity: 1; visibility: visible; transform: translateY(-50%); transition: opacity .6s .15s var(--ease), transform .9s .1s var(--ease), visibility 0s; }
+.door.on .door-panel { opacity: 1; visibility: visible; transform: none; transition: opacity .6s .15s var(--ease), transform .9s .1s var(--ease), visibility 0s; }
 .door-panel .eyebrow { color: var(--taupe-soft); }
-.door-panel h3 { font-family: var(--serif); font-weight: 400; font-size: 44px; line-height: 1; text-transform: uppercase; margin: 10px 0 14px; }
+.door-panel h3 { font-family: var(--serif); font-weight: 400; font-size: 40px; line-height: 1; text-transform: uppercase; margin: 8px 0 10px; }
 .door-panel h3 em { text-transform: none; }
 .door-panel p { font-size: 13.5px; }
 .door-img { display: none; }
-.door-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.door-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .door-links .pill { min-height: 44px; padding: 11px 18px; font-size: 10.5px; }
 
 /* =========================================================
@@ -695,7 +695,6 @@ ul, ol { list-style: none; }
    ========================================================= */
 @media (max-width: 1100px) {
   .coverlines i { display: none; }
-  .door-panel { width: 42%; }
 }
 
 @media (max-width: 900px) {
@@ -730,7 +729,7 @@ ul, ol { list-style: none; }
 
   .doors { min-height: auto; display: block; }
   .doors-bg { display: none; }
-  .door-list { display: grid; gap: 18px; }
+  .door-list { display: grid; gap: 18px; max-width: none; padding-bottom: 0; }
   .door-word { font-size: clamp(54px, 15vw, 90px); color: var(--cream); -webkit-text-stroke: 0; }
   .door.on .door-word span { transform: none; }
   .door-word span { font-style: italic; }
