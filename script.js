@@ -317,118 +317,50 @@
   }
 
   /* =========================================================
-     VINYL — generative lo-fi loop (Web Audio, user-initiated)
+     VINYL — Spotify iFrame API (record spins in sync with playback)
      ========================================================= */
   const vinyl = $('#vinyl');
   if (vinyl) {
     const btn = $('.vinyl-stage', vinyl), stateTxt = $('.vinyl-state', vinyl);
-    let music = null, playing = false;
+    const slot = $('#spotify-embed');
+    let controller = null, playing = false, wantPlay = false;
 
-    function createMusic() {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return null;
-      const ctx = new AC();
-      const master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
-      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1500; lp.Q.value = .4; lp.connect(master);
-      const delay = ctx.createDelay(); delay.delayTime.value = .36;
-      const fb = ctx.createGain(); fb.gain.value = .3; const wet = ctx.createGain(); wet.gain.value = .22;
-      delay.connect(fb); fb.connect(delay); delay.connect(wet); wet.connect(lp);
-      const bus = ctx.createGain(); bus.connect(lp); bus.connect(delay);
+    const setPlaying = (on) => {
+      playing = on;
+      vinyl.classList.toggle('playing', on);
+      btn.setAttribute('aria-pressed', on);
+      btn.setAttribute('aria-label', (on ? 'Pause ' : 'Play ') + 'Fashion Killa by A$AP Rocky');
+      btn.dataset.cursor = on ? 'Pause' : 'Play';
+      const cl = document.querySelector('.cursor-label');
+      if (cl && cursor && cursor.classList.contains('is-label')) cl.textContent = btn.dataset.cursor;
+      stateTxt.textContent = on ? 'Now playing — tap to pause' : 'Paused — tap to play';
+    };
 
-      // vinyl crackle
-      const nb = ctx.createBuffer(1, ctx.sampleRate * 3, ctx.sampleRate), d = nb.getChannelData(0);
-      for (let i = 0; i < d.length; i++) d[i] = (Math.random() < .0007 ? (Math.random() * 2 - 1) * .8 : 0) + (Math.random() * 2 - 1) * .01;
-      const crackle = ctx.createBufferSource(); crackle.buffer = nb; crackle.loop = true;
-      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 1800;
-      const cg = ctx.createGain(); cg.gain.value = .55;
-      crackle.connect(hp); hp.connect(cg); cg.connect(master); crackle.start();
-
-      const hatBuf = ctx.createBuffer(1, ctx.sampleRate * .05, ctx.sampleRate), hd = hatBuf.getChannelData(0);
-      for (let i = 0; i < hd.length; i++) hd[i] = (Math.random() * 2 - 1) * (1 - i / hd.length);
-
-      const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
-      const chords = [[50, 53, 57, 60, 64], [43, 53, 57, 59, 64], [48, 52, 55, 59, 62], [45, 52, 55, 60, 64]]; // Dm9 G13 Cmaj9 Am7
-      const melody = [[74, 0], [72, 1.5], [69, 2.5], [76, 0.5], [74, 2], [71, 3], [72, 0], [76, 1.5], [79, 2.5], [76, 1], [72, 2.5], [69, 3.5]];
-      const bpm = 74, beat = 60 / bpm;
-
-      const note = (freq, t, dur, vol, type = 'triangle', dest = bus) => {
-        const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain();
-        o.type = type; o2.type = 'sine'; o.frequency.value = freq; o2.frequency.value = freq * 1.003;
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(vol, t + .06);
-        g.gain.exponentialRampToValueAtTime(vol * .45, t + dur * .5);
-        g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-        o.connect(g); o2.connect(g); g.connect(dest);
-        o.start(t); o2.start(t); o.stop(t + dur + .05); o2.stop(t + dur + .05);
-      };
-      const kick = (t) => {
-        const o = ctx.createOscillator(), g = ctx.createGain();
-        o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(42, t + .18);
-        g.gain.setValueAtTime(.32, t); g.gain.exponentialRampToValueAtTime(.001, t + .35);
-        o.connect(g); g.connect(lp); o.start(t); o.stop(t + .4);
-      };
-      const hat = (t, v = .05) => {
-        const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
-        s.buffer = hatBuf; f.type = 'highpass'; f.frequency.value = 7000; g.gain.value = v;
-        s.connect(f); f.connect(g); g.connect(master); s.start(t);
-      };
-      const snare = (t) => {
-        const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
-        s.buffer = hatBuf; s.playbackRate.value = .35; f.type = 'bandpass'; f.frequency.value = 1800; f.Q.value = .7;
-        g.gain.setValueAtTime(.12, t); g.gain.exponentialRampToValueAtTime(.001, t + .2);
-        s.connect(f); f.connect(g); g.connect(lp); s.start(t);
-      };
-
-      let step = 0, next = 0, timer = null;
-      const schedule = () => {
-        while (next < ctx.currentTime + .5) {
-          const b = step % 4, barN = Math.floor(step / 4), t = next;
-          const swing = beat * .08;
-          if (b === 0) {
-            const ch = chords[barN % 4];
-            ch.forEach((m, i) => note(mtof(m), t + i * .012, beat * 4.1, .03, 'triangle'));
-            note(mtof(ch[0] - 12), t, beat * 1.8, .11, 'sine', lp);
-            note(mtof(ch[0] - 12), t + beat * 2.5, beat * 1.2, .08, 'sine', lp);
-          }
-          if (b === 0 || b === 2.5) kick(t);
-          if (b === 2) kick(t + beat * .5);
-          if (b === 1 || b === 3) snare(t);
-          hat(t + beat * .5 + swing, .035); hat(t, .02);
-          melody.filter(mm => Math.floor(mm[1]) === b && Math.floor(step / 4) % 8 >= 4)
-            .forEach(mm => note(mtof(mm[0]), t + (mm[1] % 1) * beat, beat * 1.4, .022, 'sine'));
-          next += beat; step++;
-        }
-      };
-      return {
-        ctx,
-        start() {
-          ctx.resume();
-          next = ctx.currentTime + .1;
-          master.gain.cancelScheduledValues(ctx.currentTime);
-          master.gain.linearRampToValueAtTime(.55, ctx.currentTime + 1.2);
-          schedule(); timer = setInterval(schedule, 120);
-        },
-        stop() {
-          master.gain.cancelScheduledValues(ctx.currentTime);
-          master.gain.setValueAtTime(master.gain.value, ctx.currentTime);
-          master.gain.linearRampToValueAtTime(0, ctx.currentTime + .6);
-          setTimeout(() => { clearInterval(timer); ctx.suspend(); }, 700);
-        },
-      };
-    }
+    window.onSpotifyIframeApiReady = (IFrameAPI) => {
+      IFrameAPI.createController(slot, { uri: vinyl.dataset.spotify, width: '100%', height: 80 }, (c) => {
+        controller = c;
+        c.addListener('playback_update', e => { if (e && e.data) setPlaying(!e.data.isPaused); });
+        c.addListener('ready', () => { if (wantPlay) { wantPlay = false; c.play(); } });
+      });
+    };
+    // load the Spotify embed API once the moodboard is near the viewport
+    const loadSpotify = () => {
+      if (window.__spotifyLoading) return; window.__spotifyLoading = true;
+      const sc = document.createElement('script'); sc.src = 'https://open.spotify.com/embed/iframe-api/v1'; sc.async = true;
+      sc.onerror = () => { wantPlay = false; setPlaying(false); stateTxt.textContent = 'Tap “Listen on Spotify” to play'; };
+      document.head.appendChild(sc);
+    };
+    if ('IntersectionObserver' in window) {
+      const vio = new IntersectionObserver(es => { if (es.some(en => en.isIntersecting)) { loadSpotify(); vio.disconnect(); } }, { rootMargin: '600px 0px' });
+      vio.observe(vinyl);
+    } else loadSpotify();
 
     btn.addEventListener('click', () => {
-      playing = !playing;
-      vinyl.classList.toggle('playing', playing);
-      btn.setAttribute('aria-pressed', playing);
-      btn.setAttribute('aria-label', playing ? 'Pause the moodboard record' : 'Play the moodboard record');
-      btn.dataset.cursor = playing ? 'Pause' : 'Play';
-      const cl = document.querySelector('.cursor-label'); if (cl && cursor && cursor.classList.contains('is-label')) cl.textContent = btn.dataset.cursor;
-      stateTxt.textContent = playing ? 'Playing — tap to pause' : 'Paused — tap to play';
-      if (!music) music = createMusic();
-      if (music) playing ? music.start() : music.stop();
+      if (controller) { controller.togglePlay(); setPlaying(!playing); return; }
+      // API not ready yet: spin now, start playback as soon as it is
+      wantPlay = true; loadSpotify(); setPlaying(true); stateTxt.textContent = 'Loading the track…';
+      setTimeout(() => { if (!controller && wantPlay) { wantPlay = false; setPlaying(false); stateTxt.textContent = 'Tap “Listen on Spotify” to play'; } }, 8000);
     });
-    document.addEventListener('visibilitychange', () => { if (document.hidden && playing) btn.click(); });
   }
 
   /* =========================================================

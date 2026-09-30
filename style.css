@@ -419,7 +419,7 @@ ul, ol { list-style: none; }
 .board-actions { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
 
 /* ---------- vinyl ---------- */
-.vinyl { display: flex; align-items: center; gap: 26px; padding: 22px; background: var(--ink); color: var(--cream); border-radius: 12px; }
+.vinyl { display: flex; flex-wrap: wrap; align-items: center; gap: 22px 26px; padding: 22px; background: var(--ink); color: var(--cream); border-radius: 12px; }
 .vinyl-stage { position: relative; flex: 0 0 auto; width: 190px; height: 150px; }
 .sleeve {
   position: absolute; left: 0; top: 0; width: 150px; height: 150px; z-index: 2;
@@ -447,6 +447,9 @@ ul, ol { list-style: none; }
 .tonearm::before { content: ""; position: absolute; top: -4px; left: -5px; width: 16px; height: 16px; border-radius: 50%; background: var(--taupe-soft); }
 .tonearm::after { content: ""; position: absolute; bottom: -6px; left: -3px; width: 12px; height: 16px; background: var(--taupe-soft); border-radius: 2px; transform: rotate(20deg); }
 .vinyl.playing .tonearm { transform: rotate(24deg); }
+.spotify-slot { flex: 1 1 100%; min-height: 80px; border-radius: 12px; overflow: hidden; }
+.spotify-slot iframe { display: block; width: 100%; border: 0; border-radius: 12px; }
+.desk-copy .vinyl p { color: var(--cream); margin-bottom: 0; }
 .vinyl-info .eyebrow { color: var(--taupe-soft); font-size: 10px; }
 .vinyl-track { font-family: var(--serif); font-size: 24px; line-height: 1.1; margin: 4px 0; }
 .vinyl-state { font-size: 11.5px; opacity: .75; }
