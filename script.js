@@ -381,7 +381,7 @@
   });
 
   /* ---------- batch fade-ups ---------- */
-  const batchSel = '.tags li, .toc li, .social-rows li, .trip-tags li, .stat, .creds > div, .topic, .bio-block, .fact-list li, .gallery-grid a, .checklist li, .door-links, .brief, .contents-head .script-note';
+  const batchSel = '.feature, .tags li, .toc li, .social-rows li, .trip-tags li, .stat, .creds > div, .topic, .bio-block, .fact-list li, .gallery-grid a, .checklist li, .door-links, .brief, .contents-head .script-note';
   $$(batchSel).forEach(el => el.classList.add('rv'));
   ScrollTrigger.batch(batchSel, { start: 'top 92%', once: true, onEnter: b => b.forEach((el, i) => { el.style.setProperty('--d', (i * .07) + 's'); el.classList.add('in'); }) });
 
