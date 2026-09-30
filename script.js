@@ -330,9 +330,11 @@
     if ($('.cover')) {
       tl.from('.cover-meta', { opacity: 0, y: -14, duration: 1 }, 0)
         .from(mhChars, { yPercent: 115, rotate: 6, duration: 1.3, stagger: .045 }, .05)
-        .from('.cover-cut', { yPercent: 22, opacity: 0, scale: 1.06, duration: 1.9 }, .35)
+        .from('.cover-bg img', { scale: 1.25, duration: 2.6, ease: 'expo.out' }, 0)
+        .from('.cover-bg', { clipPath: 'inset(12% 8% 12% 8%)', duration: 1.8, ease: 'expo.inOut' }, 0)
         .from('.coverlines li', { y: 40, opacity: 0, duration: 1.1, stagger: .08 }, .8)
-        .fromTo('.cover-sign', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 1.6, ease: 'power2.inOut' }, 1.1)
+        
+        .fromTo('.cover-sign', { clipPath: 'inset(-50% 100% -50% -10%)' }, { clipPath: 'inset(-50% -10% -50% -10%)', duration: 1.6, ease: 'power2.inOut' }, 1.1)
         .from('.cover-foot > *', { y: 20, opacity: 0, duration: 1, stagger: .1 }, 1.2)
         .from('.nav > *', { y: -20, opacity: 0, duration: 1, stagger: .08 }, .9)
         .from('.scroll-cue', { opacity: 0, duration: 1 }, 1.6);
@@ -368,7 +370,7 @@
 
   /* ---------- cover scroll + tilt ---------- */
   if ($('.cover')) {
-    G.to('.cover-cut', { yPercent: -10, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
+    G.to('.cover-bg img', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
     G.to('.masthead', { yPercent: 35, opacity: .2, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
     G.to('.cover-grid', { yPercent: -8, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
   }
@@ -394,7 +396,7 @@
   if (scrub) {
     splitWords(scrub, 'sw');
     G.to($$('.sw', scrub), { opacity: 1, stagger: .12, ease: 'none', scrollTrigger: { trigger: '.quote', start: 'top 70%', end: 'bottom 70%', scrub: true } });
-    G.from('.quote-sign', { clipPath: 'inset(0 100% 0 0)', duration: 1.4, ease: 'power2.inOut', scrollTrigger: { trigger: '.quote-sign', start: 'top 90%' } });
+    G.fromTo('.quote-sign', { clipPath: 'inset(-50% 100% -50% -10%)' }, { clipPath: 'inset(-50% -10% -50% -10%)', duration: 1.4, ease: 'power2.inOut', scrollTrigger: { trigger: '.quote-sign', start: 'top 90%' } });
   }
 
   /* ---------- lookbook horizontal ---------- */
@@ -420,7 +422,7 @@
   if ($('.checklist')) {
     G.set('.checklist li', { '--chk': 0 });
     ScrollTrigger.create({ trigger: '.checklist', start: 'top 80%', once: true, onEnter: () => G.to('.checklist li', { '--chk': 1, duration: .4, ease: 'back.out(3)', stagger: .15, delay: .4 }) });
-    G.fromTo('.signature', { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 2, ease: 'power2.inOut', scrollTrigger: { trigger: '.signature', start: 'top 88%' } });
+    G.fromTo('.signature', { clipPath: 'inset(-50% 100% -50% -10%)' }, { clipPath: 'inset(-50% -10% -50% -10%)', duration: 2, ease: 'power2.inOut', scrollTrigger: { trigger: '.signature', start: 'top 88%' } });
   }
 
   /* ---------- stats count-up ---------- */
