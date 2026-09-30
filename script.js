@@ -74,6 +74,9 @@
     return $$('.ch', el);
   }
 
+  /* ---------- touch copy ---------- */
+  if (!fine) { const how = $('.lb-how'); if (how) how.textContent = 'swipe through'; }
+
   /* ---------- year / dark zones ---------- */
   $$('.year').forEach(el => (el.textContent = new Date().getFullYear()));
   $$('.cover, .doors, .lookbook, .collab, .travel, .backcover, .menu, .press-hero, .press-contact, .nav, .vinyl, .loader, .brief, .topic').forEach(el => el.setAttribute('data-dark', ''));
@@ -108,24 +111,6 @@
       el.addEventListener('pointerleave', () => G.to(el, { x: 0, y: 0, duration: .8, ease: 'elastic.out(1, .4)' }));
     });
 
-    const hm = $('.hover-media'), hmImg = hm && $('img', hm);
-    if (hm) {
-      const hx = G.quickTo(hm, 'x', { duration: .6, ease: 'power3' }), hy = G.quickTo(hm, 'y', { duration: .6, ease: 'power3' });
-      let lastX = 0;
-      $$('.toc a[data-img], .social-rows a[data-img]').forEach(a => {
-        a.addEventListener('pointerenter', e => {
-          hmImg.src = a.dataset.img;
-          G.set(hm, { x: e.clientX, y: e.clientY });
-          G.to(hm, { opacity: 1, scale: 1, duration: .5, ease: 'expo.out' });
-        });
-        a.addEventListener('pointermove', e => {
-          hx(e.clientX); hy(e.clientY);
-          G.to(hm, { rotation: G.utils.clamp(-12, 12, (e.clientX - lastX) * .6), duration: .5 });
-          lastX = e.clientX;
-        });
-        a.addEventListener('pointerleave', () => G.to(hm, { opacity: 0, scale: .8, rotation: 0, duration: .35, ease: 'power2.in' }));
-      });
-    }
   }
 
   /* =========================================================
@@ -232,91 +217,6 @@
   }
 
   /* =========================================================
-     MOODBOARD — drag (desktop) / tap-to-toss (touch)
-     ========================================================= */
-  const board = $('#board');
-  if (board) {
-    const items = $$('.drag', board);
-    let z = 10;
-    const state = new Map();
-    const apply = (el) => {
-      const s = state.get(el);
-      el.style.transform = `translate(${s.x}px, ${s.y}px) rotate(${s.r}deg) scale(${s.s})`;
-    };
-    items.forEach((el, i) => {
-      el.style.setProperty('--i', i);
-      state.set(el, { x: 0, y: 0, r: parseFloat(getComputedStyle(el).getPropertyValue('--r')) || 0, s: 1 });
-      apply(el);
-    });
-
-    const bringFront = (el) => { el.style.zIndex = ++z; };
-    const toss = (el) => {
-      const s = state.get(el);
-      const b = board.getBoundingClientRect(), r = el.getBoundingClientRect();
-      const baseL = r.left - b.left - s.x, baseT = r.top - b.top - s.y;
-      const nx = Math.random() * Math.max(0, b.width - r.width) - baseL;
-      const ny = Math.random() * Math.max(0, b.height - r.height) - baseT;
-      el.classList.add('settle');
-      Object.assign(s, { x: nx, y: ny, r: (Math.random() * 24 - 12) });
-      bringFront(el); apply(el);
-      setTimeout(() => el.classList.remove('settle'), 650);
-    };
-
-    if (fine) {
-      items.forEach(el => {
-        let sx, sy, ox, oy, down = false, moved = false, vx = 0, lim;
-        el.addEventListener('pointerdown', e => {
-          if (e.button > 0) return;
-          const s = state.get(el);
-          down = true; moved = false; sx = e.clientX; sy = e.clientY; ox = s.x; oy = s.y;
-          const b = board.getBoundingClientRect(), r = el.getBoundingClientRect();
-          lim = { minX: ox - (r.left - b.left) - r.width * .3, maxX: ox + (b.right - r.right) + r.width * .3,
-                  minY: oy - (r.top - b.top) - r.height * .2, maxY: oy + (b.bottom - r.bottom) + r.height * .2 };
-          el.setPointerCapture(e.pointerId);
-        });
-        el.addEventListener('pointermove', e => {
-          if (!down) return;
-          const dx = e.clientX - sx, dy = e.clientY - sy;
-          if (!moved && Math.hypot(dx, dy) < 4) return;
-          const s = state.get(el);
-          if (!moved) { moved = true; el.classList.add('dragging'); el.classList.remove('settle'); bringFront(el); s.s = 1.06; }
-          vx = e.movementX || 0;
-          s.x = Math.min(lim.maxX, Math.max(lim.minX, ox + dx));
-          s.y = Math.min(lim.maxY, Math.max(lim.minY, oy + dy));
-          s.rTmp = s.r + Math.max(-14, Math.min(14, vx * 1.2));
-          el.style.transform = `translate(${s.x}px, ${s.y}px) rotate(${s.rTmp}deg) scale(${s.s})`;
-        });
-        const end = () => {
-          if (!down) return;
-          down = false;
-          const s = state.get(el);
-          if (moved) {
-            el.classList.remove('dragging'); el.classList.add('settle');
-            s.s = 1; s.r = Math.max(-16, Math.min(16, (s.rTmp ?? s.r)));
-            apply(el);
-            setTimeout(() => el.classList.remove('settle'), 650);
-          }
-        };
-        el.addEventListener('pointerup', end);
-        el.addEventListener('pointercancel', end);
-      });
-    } else {
-      const hint = $('.board-hint');
-      if (hint) hint.textContent = 'tap the photos ↑';
-      const how = $('.lb-how'); if (how) how.textContent = 'swipe through';
-      items.forEach(el => el.addEventListener('click', () => toss(el)));
-    }
-
-    const shuffle = $('#shuffle');
-    shuffle && shuffle.addEventListener('click', () => items.forEach((el, i) => setTimeout(() => toss(el), i * 60)));
-
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { board.classList.add('in'); io.disconnect(); } }), { threshold: .2 });
-      io.observe(board);
-    } else board.classList.add('in');
-  }
-
-  /* =========================================================
      VINYL — Spotify iFrame API (record spins in sync with playback)
      ========================================================= */
   const vinyl = $('#vinyl');
@@ -343,7 +243,7 @@
         c.addListener('ready', () => { if (wantPlay) { wantPlay = false; c.play(); } });
       });
     };
-    // load the Spotify embed API once the moodboard is near the viewport
+    // load the Spotify embed API once the player is near the viewport
     const loadSpotify = () => {
       if (window.__spotifyLoading) return; window.__spotifyLoading = true;
       const sc = document.createElement('script'); sc.src = 'https://open.spotify.com/embed/iframe-api/v1'; sc.async = true;
@@ -462,16 +362,6 @@
     G.to('.cover-photo-inner img', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
     G.to('.masthead', { yPercent: 35, opacity: .2, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
     G.to('.cover-grid', { yPercent: -8, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
-    if (fine) {
-      const inner = $('.cover-photo-inner');
-      const tx = G.quickTo(inner, 'rotationY', { duration: .8, ease: 'power3' }), ty = G.quickTo(inner, 'rotationX', { duration: .8, ease: 'power3' });
-      G.set(inner, { transformPerspective: 1000 });
-      $('.cover').addEventListener('pointermove', e => {
-        const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
-        tx(x * 10); ty(-y * 8);
-        G.to(mhChars, { x: (i) => x * (i - mhChars.length / 2) * 1.6, duration: .8, ease: 'power3', overwrite: 'auto' });
-      });
-    }
   }
 
   /* ---------- split heading reveals ---------- */
@@ -514,7 +404,7 @@
   /* ---------- parallax + image reveals ---------- */
   $$('.arch img, .press-hero .ph-img img').forEach(img => G.fromTo(img, { yPercent: -8 }, { yPercent: 0, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } }));
   G.fromTo('.travel-bg img', { yPercent: -8 }, { yPercent: 8, ease: 'none', scrollTrigger: { trigger: '.travel', start: 'top bottom', end: 'bottom top', scrub: true } });
-  $$('.arch, .shop-photo img').forEach(el => G.from(el, { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.5, ease: 'expo.inOut', scrollTrigger: { trigger: el, start: 'top 80%' } }));
+  $$('.arch, .shop-photo img, .ap-main, .ap-small').forEach(el => G.from(el, { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.5, ease: 'expo.inOut', scrollTrigger: { trigger: el, start: 'top 80%' } }));
   G.from('.spin-badge, .shop-sticker', { scale: 0, rotate: -90, duration: 1.2, ease: 'back.out(1.8)', scrollTrigger: { trigger: '.editor', start: 'top 60%' } });
 
   /* ---------- editor letter ---------- */

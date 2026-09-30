@@ -1,6 +1,6 @@
 /* =========================================================
    FRANCHESCA BETHEL — ISSUE Nº 01
-   Magazine × Moodboard
+   Magazine edition
    ========================================================= */
 :root {
   --wine: #5c1a1c;
@@ -363,9 +363,7 @@ ul, ol { list-style: none; }
    ========================================================= */
 .desk {
   position: relative; overflow-x: clip; padding: clamp(90px, 11vw, 150px) 0;
-  background-color: var(--paper);
-  background-image: radial-gradient(rgba(92,26,28,.14) 1px, transparent 1.4px);
-  background-size: 22px 22px;
+  background: var(--paper);
 }
 .desk-wrap { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(40px, 5vw, 80px); align-items: start; }
 .desk-copy .eyebrow { color: var(--taupe); }
@@ -376,47 +374,11 @@ ul, ol { list-style: none; }
 .creds > div { display: grid; grid-template-columns: 120px 1fr; gap: 14px; padding: 12px 0; border-bottom: 1px solid rgba(29,19,18,.25); font-size: 13px; }
 .creds dt { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--wine); padding-top: 2px; }
 
-.board-wrap { position: sticky; top: 90px; }
-.board { position: relative; height: min(780px, 88vh); touch-action: pan-y; }
-.drag {
-  position: absolute; left: var(--x); top: var(--y); transform: rotate(var(--r));
-  cursor: grab; user-select: none; -webkit-user-select: none; touch-action: none;
-  will-change: transform;
-}
-.drag.dragging { cursor: grabbing; }
-.drag.settle { transition: transform .6s cubic-bezier(.34,1.56,.64,1), box-shadow .3s; }
-.js .board .drag { opacity: 0; translate: 0 -80px; transition: opacity .6s var(--ease) calc(var(--i, 0) * 90ms), translate .9s cubic-bezier(.34,1.56,.64,1) calc(var(--i, 0) * 90ms); }
-.js .board.in .drag { opacity: 1; translate: 0 0; }
-.no-anim .board .drag { opacity: 1 !important; translate: none !important; }
-@media (pointer: coarse) { .drag { touch-action: manipulation; cursor: pointer; } }
-.drag.dragging.pol { box-shadow: 0 40px 70px rgba(29,19,18,.35); }
-.pol { width: var(--w); background: #fff; padding: 10px 10px 44px; box-shadow: 0 16px 34px rgba(29,19,18,.22); }
-.pol img { width: 100%; aspect-ratio: 4/5; object-fit: cover; pointer-events: none; }
-.pol figcaption { position: absolute; left: 14px; right: 14px; bottom: 8px; font-family: var(--script); font-size: clamp(22px, 2vw, 30px); color: var(--wine); line-height: 1; }
-.tape { position: absolute; top: -14px; left: 50%; width: 96px; height: 28px; transform: translateX(-50%) rotate(-4deg); background: rgba(217,203,187,.82); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
-.tape.t2 { left: 18%; transform: rotate(-32deg); background: rgba(232,207,195,.9); }
-.sticker { display: grid; place-items: center; text-align: center; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; line-height: 1.3; box-shadow: 0 8px 18px rgba(29,19,18,.2); }
-.sticker small { font-size: 8px; letter-spacing: .1em; display: block; margin-top: 4px; }
-.s-round { width: 104px; height: 104px; border-radius: 50%; background: var(--wine); color: var(--cream); font-family: var(--didone); font-size: 26px; letter-spacing: 0; }
-.s-round small { font-family: var(--mono); }
-.s-star {
-  width: 112px; height: 112px; background: var(--blush); color: var(--wine);
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  box-shadow: none; font-weight: 500;
-}
-.s-star span { padding-top: 14px; }
-.s-pill { padding: 10px 18px; border-radius: 999px; background: var(--ink); color: var(--cream); font-size: 10px; }
-.ticket {
-  display: grid; gap: 2px; padding: 12px 22px 12px 18px; background: var(--cream); color: var(--wine);
-  border: 1px dashed var(--wine); box-shadow: 0 8px 18px rgba(29,19,18,.18);
-  -webkit-mask: radial-gradient(circle 8px at 0 50%, transparent 98%, #000) , radial-gradient(circle 8px at 100% 50%, transparent 98%, #000);
-  -webkit-mask-composite: source-in; mask-composite: intersect;
-}
-.ticket b { font-family: var(--didone); font-size: 20px; font-weight: 600; letter-spacing: .06em; }
-.ticket span { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
-.ticket small { font-size: 9px; letter-spacing: .2em; opacity: .7; }
-.note { width: 170px; padding: 16px; background: #fff7c9; font-family: var(--script); font-size: 26px; line-height: 1.05; color: var(--ink); box-shadow: 0 10px 20px rgba(29,19,18,.18); }
-.board-actions { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+.about-photos { position: relative; padding-bottom: 60px; }
+.ap-main { width: 78%; aspect-ratio: 4/5; overflow: hidden; border-radius: 999px 999px 6px 6px; box-shadow: 0 30px 60px rgba(58,15,17,.2); }
+.ap-small { position: absolute; right: 0; bottom: 0; width: 42%; aspect-ratio: 3/4; overflow: hidden; border-radius: 6px; border: 8px solid var(--paper); box-shadow: 0 20px 40px rgba(58,15,17,.2); }
+.ap-main img, .ap-small img { width: 100%; height: 100%; object-fit: cover; }
+.ap-caption { position: absolute; left: 6%; bottom: 8px; font-family: var(--script); font-size: clamp(44px, 4.4vw, 68px); line-height: 1; color: var(--wine); }
 
 /* ---------- vinyl ---------- */
 .vinyl { display: flex; flex-wrap: wrap; align-items: center; gap: 22px 26px; padding: 22px; background: var(--ink); color: var(--cream); border-radius: 12px; }
@@ -777,16 +739,9 @@ ul, ol { list-style: none; }
   .door-panel h3 { font-size: 36px; }
 
   .desk-wrap { grid-template-columns: 1fr; }
-  .board-wrap { position: relative; top: 0; }
-  .board { height: 620px; }
-  .pol { padding: 7px 7px 34px; }
-  .pol figcaption { font-size: 20px; }
-  .s-round { width: 84px; height: 84px; font-size: 20px; }
-  .s-star { width: 90px; height: 90px; font-size: 10px; }
-  .note { width: 130px; font-size: 20px; padding: 12px; }
-  .ticket b { font-size: 16px; }
 
   .vinyl { flex-direction: column; align-items: flex-start; }
+  .about-photos { max-width: 460px; }
 
   .editor-wrap, .shop-wrap, .facts-grid { grid-template-columns: 1fr; }
   .editor-photo { max-width: 360px; }
@@ -851,7 +806,6 @@ ul, ol { list-style: none; }
   .pass-route .to { overflow: hidden; }
   .pass-route b { font-size: clamp(34px, 11vw, 46px); }
   .bc-big { font-size: 12.4vw; }
-  .s-star { left: min(var(--x), calc(100% - 96px)); }
 }
 
 @media (max-width: 520px) {
