@@ -374,6 +374,7 @@ ul, ol { list-style: none; }
 .ap-main { width: 78%; aspect-ratio: 4/5; overflow: hidden; border-radius: 999px 999px 6px 6px; box-shadow: 0 30px 60px rgba(58,15,17,.2); }
 .ap-small { position: absolute; right: 0; bottom: 0; width: 42%; aspect-ratio: 3/4; overflow: hidden; border-radius: 6px; border: 8px solid var(--paper); box-shadow: 0 20px 40px rgba(58,15,17,.2); }
 .ap-main img, .ap-small img { width: 100%; height: 100%; object-fit: cover; }
+.ap-main img { object-position: 32% 55%; }
 .ap-caption { position: absolute; left: 6%; bottom: 8px; font-family: var(--script); font-size: clamp(44px, 4.4vw, 68px); line-height: 1; color: var(--wine); }
 
 /* ---------- vinyl ---------- */
