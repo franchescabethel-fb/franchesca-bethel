@@ -108,9 +108,12 @@ ul, ol { list-style: none; }
 
 .curtain {
   position: fixed; inset: 0; z-index: 800; background: var(--wine); color: var(--cream);
-  display: grid; place-items: center; transform: translateY(101%); pointer-events: none;
+  display: grid; place-items: center; pointer-events: none;
+  transform: translateY(101%); transition: transform .8s cubic-bezier(.87, 0, .13, 1);
 }
-.curtain span { font-family: var(--script); font-size: clamp(40px, 6vw, 80px); }
+.curtain.is-covering { transform: translateY(0); pointer-events: auto; }
+.curtain.is-covering.is-leaving { transform: translateY(-101%); pointer-events: none; }
+.curtain span { font-family: var(--script); font-size: clamp(40px, 6vw, 80px); padding: .2em .3em; }
 
 .grain {
   position: fixed; inset: -50%; z-index: 700; pointer-events: none; opacity: .07;

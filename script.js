@@ -165,23 +165,45 @@
      PAGE TRANSITION (curtain)
      ========================================================= */
   const curtain = $('.curtain');
-  if (curtain && G && !reduce) {
-    if (store.get('fb-curtain')) {
-      store.del('fb-curtain');
-      G.set(curtain, { yPercent: 0 });
-      G.to(curtain, { yPercent: -101, duration: 1, ease: 'expo.inOut', delay: .15 });
-    }
+  if (curtain && !reduce) {
+    const DUR = 800;
+    const instant = (fn) => { curtain.style.transition = 'none'; fn(); void curtain.offsetHeight; curtain.style.transition = ''; };
+    const reset = () => instant(() => curtain.classList.remove('is-covering', 'is-leaving'));
+    const reveal = () => {
+      // start fully covering, then slide up and away
+      instant(() => { curtain.classList.remove('is-leaving'); curtain.classList.add('is-covering'); });
+      requestAnimationFrame(() => {
+        curtain.classList.add('is-leaving');
+        setTimeout(reset, DUR + 200);
+      });
+    };
+    if (store.get('fb-curtain')) { store.del('fb-curtain'); reveal(); }
+    // safety net: never leave the curtain over the page
+    window.addEventListener('load', () => setTimeout(() => { if (!curtain.classList.contains('is-leaving')) reset(); }, 3000));
+    window.addEventListener('pageshow', ev => { if (ev.persisted) reset(); });
+
     document.addEventListener('click', e => {
       const a = e.target.closest('a[href]');
-      if (!a || a.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      if (!a || a.target === '_blank' || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button > 0) return;
       const href = a.getAttribute('href');
-      if (!/\.html(#.*)?$/.test(href) || href.startsWith('http')) return;
+      if (!/\.html(#.*)?$/.test(href) || /^https?:/.test(href)) return;
+      const url = new URL(href, location.href);
+      // same page (e.g. "press.html" while already on it): just scroll, no transition
+      const norm = p => p.replace(/index\.html$/, '');
+      if (norm(url.pathname) === norm(location.pathname)) {
+        e.preventDefault();
+        if (menuOpen) setMenu(false);
+        const target = url.hash ? $(url.hash) : 0;
+        setTimeout(() => scrollToTarget(target || 0), menuOpen ? 350 : 0);
+        return;
+      }
       e.preventDefault();
       if (menuOpen) setMenu(false);
       store.set('fb-curtain', '1');
-      G.fromTo(curtain, { yPercent: 101 }, { yPercent: 0, duration: .8, ease: 'expo.inOut', onComplete: () => (location.href = href) });
+      reset();
+      requestAnimationFrame(() => curtain.classList.add('is-covering'));
+      setTimeout(() => { location.href = url.href; }, DUR);
     });
-    window.addEventListener('pageshow', ev => { if (ev.persisted) G.set(curtain, { yPercent: 101 }); });
   }
 
   /* =========================================================
