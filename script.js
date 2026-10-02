@@ -74,6 +74,23 @@
     return $$('.ch', el);
   }
 
+  /* ---------- fit + center the cover masthead to the page margins ---------- */
+  const fitMasthead = () => {
+    const mhEl = $('.masthead .mh'), ref = $('.cover-meta');
+    if (!mhEl || !ref) return;
+    const head = mhEl.parentElement;
+    head.style.fontSize = '';
+    const target = ref.getBoundingClientRect().width;
+    const w = mhEl.getBoundingClientRect().width;
+    if (!w) return;
+    const size = parseFloat(getComputedStyle(head).fontSize) * (target / w);
+    head.style.fontSize = size.toFixed(2) + 'px';
+  };
+  fitMasthead();
+  window.addEventListener('resize', fitMasthead);
+  window.addEventListener('load', fitMasthead);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMasthead);
+
   /* ---------- touch copy ---------- */
   if (!fine) { const how = $('.lb-how'); if (how) how.textContent = 'swipe through'; }
 

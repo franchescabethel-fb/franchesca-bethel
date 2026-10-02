@@ -232,9 +232,9 @@ ul, ol { list-style: none; }
   text-shadow: 0 8px 40px rgba(30,6,8,.35);
   font-family: var(--didone); font-weight: 500; font-style: normal;
   font-size: 15.4vw; line-height: .78; letter-spacing: -.035em; text-align: center;
-  margin: 2.2vw -0.02em 0; white-space: nowrap; user-select: none;
+  margin: 2.2vw 0 0; white-space: nowrap; user-select: none;
 }
-.masthead .mh { display: inline-block; }
+.masthead .mh { display: inline-block; padding-right: .035em; }
 .masthead .ch { display: inline-block; will-change: transform; }
 .masthead .ch:nth-child(even) { font-style: italic; }
 
