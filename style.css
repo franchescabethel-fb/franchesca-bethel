@@ -1036,3 +1036,12 @@ ul, ol { list-style: none; }
 .top-posts thead th:nth-child(2), .top-posts thead th:nth-child(3) { text-align: left; }
 .ig-head { color: var(--taupe-soft); margin: 60px 0 16px; }
 .ig-stats .stat b { font-size: clamp(44px, 5vw, 76px); }
+
+/* reels: real videos */
+.reel-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+.reel-media video { cursor: pointer; }
+.reel-sound { position: absolute; right: 10px; bottom: 10px; z-index: 2; font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--cream); background: rgba(29,19,18,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border-radius: 999px; padding: 7px 11px; min-height: 30px; }
+.reel-sound[aria-pressed="true"] { background: var(--cream); color: var(--wine); }
+.shot-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .reel-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .shot-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .reel-grid, .shot-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

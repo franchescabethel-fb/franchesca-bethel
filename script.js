@@ -346,6 +346,34 @@
   }));
 
   /* =========================================================
+     CREATOR: reels play when visible, tap for sound
+     ========================================================= */
+  const reels = $$('.reel video');
+  if (reels.length) {
+    const playV = v => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+    const setSound = (v, on) => {
+      const b = v.parentElement.querySelector('.reel-sound');
+      v.muted = !on;
+      if (b) { b.setAttribute('aria-pressed', on); b.textContent = on ? 'Sound on' : 'Sound off'; b.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on'); }
+    };
+    const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) playV(e.target); else { e.target.pause(); setSound(e.target, false); }
+    }), { threshold: .5 }) : null;
+    reels.forEach(v => {
+      if (io && !reduce) io.observe(v);
+      const toggle = () => {
+        const on = v.muted;
+        reels.forEach(o => { if (o !== v) setSound(o, false); });
+        setSound(v, on);
+        if (v.paused) playV(v);
+      };
+      v.addEventListener('click', toggle);
+      const b = v.parentElement.querySelector('.reel-sound');
+      if (b) b.addEventListener('click', toggle);
+    });
+  }
+
+  /* =========================================================
      ANIMATION LAYER (GSAP only)
      ========================================================= */
   if (!animate) {
