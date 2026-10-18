@@ -1034,3 +1034,5 @@ ul, ol { list-style: none; }
   .top-posts tbody td:nth-child(2) { font-size: 12px; }
 }
 .top-posts thead th:nth-child(2), .top-posts thead th:nth-child(3) { text-align: left; }
+.ig-head { color: var(--taupe-soft); margin: 60px 0 16px; }
+.ig-stats .stat b { font-size: clamp(44px, 5vw, 76px); }
