@@ -96,7 +96,7 @@
 
   /* ---------- year / dark zones ---------- */
   $$('.year').forEach(el => (el.textContent = new Date().getFullYear()));
-  $$('.cover, .doors, .lookbook, .collab, .travel, .backcover, .menu, .press-hero, .press-contact, .nav, .vinyl, .loader, .brief, .topic, .soc, .as-seen').forEach(el => el.setAttribute('data-dark', ''));
+  $$('.cover, .doors, .lookbook, .collab, .travel, .backcover, .menu, .press-hero, .press-contact, .nav, .vinyl, .loader, .brief, .topic, .soc, .as-seen, .c-brands, .c-results, .svc').forEach(el => el.setAttribute('data-dark', ''));
 
   /* =========================================================
      CURSOR + MAGNETIC + HOVER MEDIA
@@ -420,7 +420,7 @@
   });
 
   /* ---------- batch fade-ups ---------- */
-  const batchSel = '.feature, .tags li, .toc li, .soc-grid li, .trip-tags li, .stat, .creds > div, .topic, .bio-block, .fact-list li, .checklist li, .door-links, .brief, .contents-head .script-note';
+  const batchSel = '.feature, .tags li, .toc li, .soc-grid li, .trip-tags li, .stat, .creds > div, .topic, .bio-block, .fact-list li, .checklist li, .door-links, .brief, .contents-head .script-note, .reel, .shot, .why li, .c-facts li, .aud-card, .svc, .brand-wall li, .an-table tbody tr';
   $$(batchSel).forEach(el => el.classList.add('rv'));
   ScrollTrigger.batch(batchSel, { start: 'top 92%', once: true, onEnter: b => b.forEach((el, i) => { el.style.setProperty('--d', (i * .07) + 's'); el.classList.add('in'); }) });
 
