@@ -980,7 +980,7 @@ ul, ol { list-style: none; }
 .aud-key { display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: var(--muted); }
 .ages li { display: grid; grid-template-columns: 52px 1fr 52px; gap: 10px; align-items: center; padding: 9px 0; font-size: 12px; }
 .ages i { display: block; height: 10px; border-radius: 999px; background: var(--taupe-soft); position: relative; overflow: hidden; }
-.ages i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: calc(var(--v) / 33.8 * 100%); background: var(--taupe); border-radius: 999px; }
+.ages i::after { content: ""; position: absolute; inset: 0 auto 0 0; width: calc(var(--v) / var(--max-v, 55.5) * 100%); background: var(--taupe); border-radius: 999px; }
 .ages li.top i::after { background: var(--wine); }
 .ages li.top b, .ages li.top span { color: var(--wine); font-weight: 500; }
 .ages b { text-align: right; font-weight: 400; }
@@ -1023,3 +1023,14 @@ ul, ol { list-style: none; }
   .an-table tbody td { font-size: 12px; }
   .an-table tbody td:nth-child(2) { font-size: 17px; }
 }
+
+.top-posts td { text-align: left !important; }
+.top-posts td:last-child { text-align: right !important; font-family: var(--didone); font-size: 22px; color: var(--blush); }
+.top-posts tbody td:nth-child(2) { font-family: var(--mono); font-size: 14px; color: var(--cream); }
+.top-posts tbody td:nth-child(3) { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--taupe-soft); }
+.res-note { color: var(--taupe-soft); margin-top: 18px; }
+@media (max-width: 600px) {
+  .top-posts thead th:nth-child(3), .top-posts tbody td:nth-child(3) { display: none; }
+  .top-posts tbody td:nth-child(2) { font-size: 12px; }
+}
+.top-posts thead th:nth-child(2), .top-posts thead th:nth-child(3) { text-align: left; }
